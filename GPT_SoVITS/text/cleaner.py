@@ -1,6 +1,6 @@
-from text import chinese, japanese, cleaned_text_to_sequence, symbols, english
+from text import chinese, japanese, cleaned_text_to_sequence, symbols, english, portuguese
 
-language_module_map = {"zh": chinese, "ja": japanese, "en": english}
+language_module_map = {"zh": chinese, "ja": japanese, "en": english, "pt": portuguese}
 special = [
     # ("%", "zh", "SP"),
     ("￥", "zh", "SP2"),
@@ -8,11 +8,10 @@ special = [
     # ('@', 'zh', "SP4")#不搞鬼畜了，和第二版保持一致吧
 ]
 
-
 def clean_text(text, language):
-    if(language not in language_module_map):
-        language="en"
-        text=" "
+    if language not in language_module_map:
+        language = "en"
+        text = " "
     for special_s, special_l, target_symbol in special:
         if special_s in text and language == special_l:
             return clean_special(text, language, special_s, target_symbol)
@@ -29,7 +28,6 @@ def clean_text(text, language):
     for ph in phones:
         assert ph in symbols
     return phones, word2ph, norm_text
-
 
 def clean_special(text, language, special_s, target_symbol):
     """
@@ -48,11 +46,9 @@ def clean_special(text, language, special_s, target_symbol):
             new_ph.append(ph)
     return new_ph, phones[1], norm_text
 
-
 def text_to_sequence(text, language):
-    phones = clean_text(text)
+    phones = clean_text(text, language)
     return cleaned_text_to_sequence(phones)
 
-
 if __name__ == "__main__":
-    print(clean_text("你好%啊啊啊额、还是到付红四方。", "zh"))
+    print(clean_text("Olá, tudo bem? Este é um exemplo em português!", "pt"))
