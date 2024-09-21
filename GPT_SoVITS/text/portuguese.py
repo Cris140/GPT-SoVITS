@@ -2,7 +2,6 @@ import re
 from phonemizer import phonemize
 from phonemizer.punctuation import Punctuation
 from phonemizer.backend import EspeakBackend
-
 from text import symbols
 
 # Regular expression matching Portuguese characters without punctuation marks:
@@ -50,17 +49,17 @@ def preprocess_port(text, backend):
     text = symbols_to_portuguese(text)
     sentences = re.split(_portuguese_marks, text)
     marks = re.findall(_portuguese_marks, text)
-    text = []
+    phones = []  # Inicializa phones como uma lista vazia
     for i, sentence in enumerate(sentences):
         if re.match(_portuguese_characters, sentence):
             phonemes = backend.phonemize(sentence)
-            text += list(phonemes)
+            phones += list(phonemes)
 
         if i < len(marks):
             if marks[i] == " ":
                 continue
-            text += [marks[i].replace(" ", "")]
-    return text
+            phones += [marks[i].replace(" ", "")]
+    return phones
 
 
 def text_normalize(text):
